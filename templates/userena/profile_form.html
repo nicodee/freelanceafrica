@@ -1,0 +1,45 @@
+{% extends 'userena/base_userena.html' %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans "Account setup" %}{% endblock %}
+
+{% block content %}
+<form action="" enctype="multipart/form-data" method="post">
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans "Edit Profile" %}</legend>
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    {{ field.errors }}
+    {% if field.name == 'mugshot' %}
+    <div class="form-group">
+        {{ field.label_tag }}
+        <div class="" style="margin-right:1%;">
+            <div class="fileinput fileinput-new" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 200px; height: 200px;">
+                    <img src="{{ profile.get_mugshot_url }}" alt="" style="width: 200px; height: 200px;">
+                </div>
+                <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; height: 200px;"></div>
+                <div>
+                    <span class="btn btn-default btn-file">
+                        <span class="fileinput-new">Select image</span>
+                        <span class="fileinput-exists">Change</span>
+                        {{ field }}
+                    </span>
+                    <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>
+    {{ field.label_tag }}
+    {{ field }}
+    </p>
+    {% endif %}
+    {% endfor %}
+  </fieldset>
+  <input type="submit"  class="btn btn-success btn-block btn-lg"  value="{% trans "Save changes" %}" />
+</form>
+{% endblock %}

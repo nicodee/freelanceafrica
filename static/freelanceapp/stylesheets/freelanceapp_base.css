@@ -1,0 +1,132 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,700,900);
+@import url(http://fonts.googleapis.com/css?family=Lato:400,900);
+
+body {
+  background: #ffffff; 
+  margin: 0; 
+  height: 100%;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+}
+
+.navbar {
+  min-height: 70px;
+  padding-top: 10px;
+  margin-bottom: 0px;
+}
+
+.navbar-brand {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 900;
+}
+
+.navbar-default .navbar-nav > li > a {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.dropdown-menu > li > a {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.nav-mugshot {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+#mugshot{
+  padding-bottom: 7px;
+  padding-top: 10px;
+  margin-top: -10px;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+}
+
+p { 
+  padding: 0; 
+  margin-bottom: 12px; 
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px; 
+  line-height: 24px;
+  margin-top: 10px; 
+}
+
+a { 
+  padding: 0;
+  margin: 0;
+  text-decoration: none; 
+  -webkit-transition: background-color .4s linear, color .4s linear;
+  -moz-transition: background-color .4s linear, color .4s linear;
+  -o-transition: background-color .4s linear, color .4s linear;
+  -ms-transition: background-color .4s linear, color .4s linear;
+  transition: background-color .4s linear, color .4s linear;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+footer {
+  /*position: absolute;*/
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+#push{
+  height:900px;
+}
+
+#main_content {
+  padding-top: 150px;
+}
+
+.form-control {
+  font-size: 1.1em;
+  height: auto;
+  border: 2px solid #ccc;
+  -webkit-transition: all .35s ease;
+  -moz-transition: all .35s ease;
+  -ms-transition: all .35s ease;
+  -o-transition: all .35s ease;
+  transition: all .35s ease;
+  box-shadow: none;
+}
+.form-control:focus {
+ border-color: #6c7544;
+  outline: none;
+ -webkit-box-shadow:none; 
+  box-shadow:none; 
+}
+
+/*input[type="text"], 
+input[type="password"], 
+select, 
+input[type="email"],*/
+.form-control {
+  padding: 10px;
+  border: solid 3px #c9c9c9;
+  transition: border 0.3s;
+}
+/*
+input[type="text"]:focus,
+input[type="text"].focus,
+input[type="password"]:focus,
+input[type="password"].focus,
+input[type="email"]:focus,
+input[type="email"].focus */
+.form-control:focus,
+.form-control.focus {
+  border: solid 3px #969696;
+}
+
+input[type="date"] {
+  line-height: 1.42857143;  
+}

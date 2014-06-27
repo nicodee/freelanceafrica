@@ -36,6 +36,23 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'south',
+    'django.contrib.sites',
+    'freelanceapp',
+    'djrill',
+    'userena',
+    'guardian',
+    'easy_thumbnails',
+    'accounts',
+)
+
+SITE_ID = 1
+
+# List of callables that know how to import templates from various sources.
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -47,18 +64,63 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+#Djrill settings
+#
+MANDRILL_API_KEY = os.environ.get('MANDRILL_API_KEY')
+# EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+
+EMAIL_USE_TLS = True  
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_PORT = 587  
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') 
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# USERENA_SIGNIN_AFTER_SIGNUP = False
+USERENA_ACTIVATION_REQUIRED = True
+# End USERENA SETTINGS
+USERENA_DISABLE_PROFILE_LIST =True
+USERENA_DEFAULT_PRIVACY = 'closed'
+USERENA_MUGSHOT_SIZE = 200
+USERENA_MUGSHOT_GRAVATAR = True
+
+ANONYMOUS_USER_ID = -1
+
+AUTH_PROFILE_MODULE = 'accounts.MyProfile'
+
+LOGIN_REDIRECT_URL = '/accounts/%(username)s/'
+LOGIN_URL = '/accounts/signin/'
+LOGOUT_URL = '/accounts/signout/'
+
+SOUTH_MIGRATION_MODULES = {
+    'easy_thumbnails': 'easy_thumbnails.south_migrations',
+}
+
+
+# DEFAULT_FROM_EMAIL = 'thenimstreet@gmail.com'
+# SERVER_EMAIL = 'thenimstreet@gmail.com'
 ROOT_URLCONF = 'freelanceproject.urls'
 
 WSGI_APPLICATION = 'freelanceproject.wsgi.application'
 
+# Template directory
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    '%s/templates' % BASE_DIR,
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'freelance',
+        'USER': 'nick',
+        'PASSWORD': 'nick',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -75,11 +137,22 @@ USE_L10N = True
 
 USE_TZ = True
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+   'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/var/www/example.com/media/"
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
@@ -98,5 +171,31 @@ STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, '..', 'static'),
 )
+
+#django-allauth settings
+ACCOUNT_AUTHENTICATION_METHOD ='username_email'
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    # Required by allauth template tags
+    "django.core.context_processors.request",
+)
+
+AUTHENTICATION_BACKENDS = (
+    'userena.backends.UserenaAuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+# auth and allauth settings
+LOGIN_REDIRECT_URL = '/'
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'SCOPE': ['email', 'publish_stream'],
+        'METHOD': 'js_sdk'  # instead of 'oauth2'
+    }
+}
