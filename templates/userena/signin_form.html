@@ -16,6 +16,11 @@
     <p class="checkbox">
     <label for="id_{{ field.name }}">{{ field }} {{ field.label }}</label>
     </p>
+    {%elif field.name == 'identification'%}
+    <p>
+    <label for="id_identification">Email:</label> 
+    <input class="form-control required" id="id_identification" maxlength="75" name="identification" placeholder="Email" required="true" type="email">
+    </p>
     {% else %}
     <p>
     {{ field.label_tag }}

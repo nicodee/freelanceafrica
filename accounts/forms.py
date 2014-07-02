@@ -1,51 +1,18 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-from userena.forms import SignupFormTos, AuthenticationForm, ChangeEmailForm, EditProfileForm
+from userena.forms import SignupFormTos, AuthenticationForm, ChangeEmailForm, EditProfileForm, SignupFormOnlyEmail
 from userena.utils import get_profile_model
+from freelanceproject import choices
 USERNAME_RE = r'^[\.\w]+$'
 
 
-class SignupFormExtra(SignupFormTos):
+class SignupFormOnlyEmailExtra(SignupFormOnlyEmail):
     """
     Adding extra first and last name fields to the signup form.
 
     """
     attrs_dict = {}
-
-    attrs_dict = ({'class':'form-control required', 
-        'placeholder':'First Name',
-        'name':'first_name',
-        'type':'text',
-        'id':'id_first_name',
-        'required':'true'})
-    first_name = forms.CharField(label=_(u'First name'),
-                                 max_length=30,
-                                 widget=forms.TextInput(attrs=attrs_dict),
-                                 required=False)    
-
-    attrs_dict = ({'class':'form-control required',
-        'placeholder':'Last Name',
-        'name':'last_name',
-        'type':'text',
-        'id':'id_last_name',
-        'required':'true'})
-    last_name = forms.CharField(label=_(u'Last name'),
-                                max_length=30,
-                                widget=forms.TextInput(attrs=attrs_dict),
-                                required=False)
-
-    attrs_dict = ({'class':'form-control required',
-        'placeholder':'Username',
-        'name':'username',
-        'type':'text',
-        'required':'true',
-        'id':'id_username'  })
-    username = forms.RegexField(regex=USERNAME_RE,
-                                max_length=30,
-                                widget=forms.TextInput(attrs=attrs_dict),
-                                label=_("Username"),
-                                error_messages={'invalid': _('Username must contain only letters, numbers, dots and underscores.')})
 
     attrs_dict = ({'class':'form-control required',
         'placeholder':'Email',
@@ -76,30 +43,29 @@ class SignupFormExtra(SignupFormTos):
                                 label=_("Repeat password"))
 
 
-
-    def __init__(self, *args, **kw):
-        """
-        Get the first name and last name at the top of the
-        form instead of being at the end.
-        """
-        super(SignupFormExtra, self).__init__(*args, **kw)
+    # def __init__(self, *args, **kwargs):
+    #     """
+    #     Get the first name and last name at the top of the
+    #     form instead of being at the end.
+        # """
+        # super(SignupFormOnlyEmailExtra, self).__init__(*args, **kwargs)
         # Put the first and last name at the top
-        new_order = self.fields.keyOrder[:-2]
-        new_order.insert(0, 'first_name')
-        new_order.insert(1, 'last_name')
-        self.fields.keyOrder = new_order
+        # new_order = self.fields.keyOrder[:-2]
+        # new_order.insert(0, 'first_name')
+        # new_order.insert(1, 'last_name')
+        # self.fields.keyOrder = new_order
 
-    def save(self):
-        """
-        Overriding the save method to save the first and last name to the user
-        field.
-        """
+    def save(self, *args, **kwargs):
+    #     """
+    #     Overriding the save method to save the first and last name to the user
+    #     field.
+    #     """
         # First save the parent form and get the user.
-        new_user = super(SignupFormExtra, self).save()
+        new_user = super(SignupFormOnlyEmailExtra, self).save(*args, **kwargs)
 
-        new_user.first_name = self.cleaned_data['first_name']
-        new_user.last_name = self.cleaned_data['last_name']
-        new_user.save()
+        # new_user.first_name = self.cleaned_data['first_name']
+        # new_user.last_name = self.cleaned_data['last_name']
+        # new_user.save()
         # Userena expects to get the new user from this form, so return the new
         # user.
         return new_user
@@ -111,16 +77,15 @@ class AuthenticationFormExtra(AuthenticationForm):
     """
     attrs_dict = {}
 
-    attrs_dict = ({'class':'form-control required', 
-        'placeholder':'Email or username',
-        'name':'identification',
-        'type':'text',
-        'id':'id_identification',
-        'required':'true'})
-    identification = forms.CharField(label=_(u'Email or username'),
-                                 max_length=50,
-                                 widget=forms.TextInput(attrs=attrs_dict),
-                                 required=True)    
+    # attrs_dict = ({'class':'form-control required',
+    #     'placeholder':'Email',
+    #     'name':'identification',
+    #     'type':'email', 
+    #     'required':'true', 
+    #     'id':'id_identification'})
+    # identification = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
+                                                               # maxlength=75, class='form-control required')),
+                             # label=_("Email"))
 
     attrs_dict = ({'class':'form-control required',
         'placeholder':'Password',
@@ -129,7 +94,14 @@ class AuthenticationFormExtra(AuthenticationForm):
         'id':'id_password'})
     password = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict,
                                                            render_value=False),
-                                label=_("Password"))   
+                                label=_("Password"))
+
+    # def __init__(self, *args, **kwargs):
+        # super(AuthenticationFormExtra, self).__init__(*args, **kwargs)
+        # del self.fields['identification']
+        # self.fields.insert(0,'email', self.fields['email'])
+    # class Meta:
+        # exclude = ['identification']   
 
 class ChangeEmailFormExtra(ChangeEmailForm):
     """
@@ -151,19 +123,9 @@ class EditProfileFormExtra(EditProfileForm):
     
     attrs_dict = {}
 
-    LEVEL = (
-        (1, _('Registered')),
-        (2, _('Open')),
-        (3, _('Closed')),
-    )
-
-    GENDER_CHOICES = (
-        (1, _('Male')),
-        (2, _('Female')),
-        (3, _('None'))
-    )
-
     mugshot = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'id': 'id_mugshot'}), required=False)
+
+    identification = forms.ImageField(widget=forms.FileInput(attrs={'type': 'file', 'id': 'id_identification'}), required=False)
 
     attrs_dict = ({'class':'form-control required', 
         'placeholder':'First Name',
@@ -176,51 +138,53 @@ class EditProfileFormExtra(EditProfileForm):
                                  widget=forms.TextInput(attrs=attrs_dict),
                                  required=True)
 
-    attrs_dict = ({'class':'form-control required',
-        'placeholder':'Last Name',
-        'name':'last_name',
-        'type':'text',
-        'id':'id_last_name',
-        'required':'true'})
+    attrs_dict = ({'class':'form-control required', 'placeholder':'Last Name', 'name':'last_name', 'type':'text', 'id':'id_last_name', 'required':'true'})
     last_name = forms.CharField(label=_(u'Last name'),
                                 max_length=30,
                                 widget=forms.TextInput(attrs=attrs_dict),
                                 required=True)
     
     attrs_dict = ({  'class': 'form-control required', 'name': 'gender' })
-    gender = forms.ChoiceField(label=_(u'Gender'),choices=GENDER_CHOICES, widget=forms.Select(attrs=attrs_dict))
+    gender = forms.ChoiceField(label=_(u'Gender'),choices=choices.GENDER_CHOICES, widget=forms.Select(attrs=attrs_dict))
 
-    attrs_dict = ({  
-                    'type': 'date',
-                    'class': 'form-control',
-                    'name': 'birth_date'
-                 })
+    attrs_dict = ({'type': 'date', 'class': 'form-control', 'name': 'birth_date'})
     birth_date = forms.DateField(label=_(u'Birth Date'), widget=forms.TextInput(attrs=attrs_dict), required=False)
 
-    attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'country_of_origin' })
-    country_of_origin = forms.CharField(label=_(u'Country of origin'), widget=forms.TextInput(attrs=attrs_dict), required=False)
-
-    attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'country_of_residence' })
-    country_of_residence = forms.CharField(label=_(u'Country of residence'), widget=forms.TextInput(attrs=attrs_dict), required=False)
+    attrs_dict = ({  'class': 'form-control required', 'name': 'profile_type' })
+    profile_type = forms.ChoiceField(label=_(u'I am here as a'), choices=choices.PROFILE_TYPE, widget=forms.Select(attrs=attrs_dict))
 
     attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'location' })
     location = forms.CharField(label=_(u'Location'), widget=forms.TextInput(attrs=attrs_dict), required=False)
 
-    attrs_dict = ({  
-                    'class': 'form-control',
-                    'cols': '30', 'rows': '5',
-                    'name': 'bio' 
-                 })
-    bio = forms.CharField(label=_(u'Short bio about yourself'), widget=forms.Textarea(attrs=attrs_dict), required=False)   
+    attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'industry' })
+    industry = forms.CharField(label=_(u'Industry:'), widget=forms.TextInput(attrs=attrs_dict), required=False)
+    
+    attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'company' })
+    company = forms.CharField(label=_(u'Company'), widget=forms.TextInput(attrs=attrs_dict), required=False)
 
+    attrs_dict = ({'class': 'form-control', 'cols': '30', 'rows': '5', 'name': 'bio', 'style': 'resize: vertical',})
+    bio = forms.CharField(label=_(u'Short bio about yourself'), max_length=250, widget=forms.Textarea(attrs=attrs_dict), required=False)   
+
+    attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'country_of_origin' })
+    country_of_origin = forms.ChoiceField(label=_(u'Country of origin'), choices=choices.AFRICAN_COUNTRIES, widget=forms.Select(attrs=attrs_dict))
+
+    attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'country_of_residence' })
+    country_of_residence = forms.ChoiceField(label=_(u'Country of residence'), choices=choices.AFRICAN_COUNTRIES, widget=forms.Select(attrs=attrs_dict))
 
     attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'phone' })
-    phone = forms.CharField(label=_(u'Phone no.'), widget=forms.TextInput(attrs=attrs_dict), required=False)
+    phone = forms.CharField(label=_(u'Phone no:'), widget=forms.TextInput(attrs=attrs_dict), required=False)
 
     class Meta:
         model = get_profile_model()
-        exclude = ['user', 'privacy', 'profile_type']
-        field = ['mugshot', 'first_name', 'last_name', 'gender', 'birth_date', 'country_of_origin', 'country_of_residence', 'location', 'bio', 'phone']
+        exclude = ['user', 'privacy']
+
+    def __init__(self, *args, **kw):
+        """
+        Get the mugshot  and identification at the top of the form.
+        """
+        super(EditProfileFormExtra, self).__init__(*args, **kw)
+        self.fields.insert(0,'mugshot', self.fields['mugshot'])
+        self.fields.insert(1,'identification', self.fields['identification'])
 
     def save(self, force_insert=False, force = False, commit=True):
         profile = super(EditProfileFormExtra, self).save(commit=commit)

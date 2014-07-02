@@ -1,0 +1,16 @@
+{% if user.is_authenticated %}
+<div class="row" id="account-settings-nav">
+	<div class="col-md-3">
+		<li><a href="{% url 'userena_profile_detail' user.username %}">View profile</a></li>
+	</div>
+	<div class="col-md-3">
+		<li><a href="{% url 'userena_profile_edit' user.username %}">Edit details</a></li>
+	</div>
+	<div class="col-md-3">
+		<li><a href="{% url 'userena_email_change' user.username %}">Change email</a></li>
+	</div>
+	<div class="col-md-3">
+		<li><a href="{% url 'userena_password_change' user.username %}">Change password</a></li>
+	</div>
+</div>
+{% endif %}

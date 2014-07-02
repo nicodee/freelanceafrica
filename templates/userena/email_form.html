@@ -6,7 +6,7 @@
 <form action="" method="post">
   {% csrf_token %}
   <fieldset>
-    <legend>{% trans "Change email address" %}</legend>
+    <!-- <legend>{% trans "Change email address" %}</legend> -->
     {{ form.as_p }}
   </fieldset>
   <input type="submit"  class="btn btn-success btn-block btn-lg"  value="{% trans "Change email" %}" />

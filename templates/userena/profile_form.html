@@ -3,12 +3,11 @@
 {% load url from future %}
 
 {% block title %}{% trans "Account setup" %}{% endblock %}
-
 {% block content %}
 <form action="" enctype="multipart/form-data" method="post">
   {% csrf_token %}
   <fieldset>
-    <legend>{% trans "Edit Profile" %}</legend>
+    <!-- <legend>{% trans "Edit Profile" %}</legend> -->
     {{ form.non_field_errors }}
     {% for field in form %}
     {{ field.errors }}
@@ -19,6 +18,26 @@
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 <div class="fileinput-new thumbnail" style="width: 200px; height: 200px;">
                     <img src="{{ profile.get_mugshot_url }}" alt="" style="width: 200px; height: 200px;">
+                </div>
+                <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; height: 200px;"></div>
+                <div>
+                    <span class="btn btn-default btn-file">
+                        <span class="fileinput-new">Select image</span>
+                        <span class="fileinput-exists">Change</span>
+                        {{ field }}
+                    </span>
+                    <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% elif field.name == 'identification' %}
+    <div class="form-group">
+        {{ field.label_tag }}
+        <div class="" style="margin-right:1%;">
+            <div class="fileinput fileinput-new" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 200px; height: 200px;">
+                    <img src="{{ profile.get_id_url }}" alt="" style="width: 200px; height: 200px;">
                 </div>
                 <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; height: 200px;"></div>
                 <div>

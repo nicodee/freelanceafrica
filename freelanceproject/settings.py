@@ -82,6 +82,7 @@ USERENA_DISABLE_PROFILE_LIST =True
 USERENA_DEFAULT_PRIVACY = 'closed'
 USERENA_MUGSHOT_SIZE = 200
 USERENA_MUGSHOT_GRAVATAR = True
+USERENA_WITHOUT_USERNAMES = True
 
 ANONYMOUS_USER_ID = -1
 
@@ -174,8 +175,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, '..', 'static'),
 )
 
-#django-allauth settings
-ACCOUNT_AUTHENTICATION_METHOD ='username_email'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',

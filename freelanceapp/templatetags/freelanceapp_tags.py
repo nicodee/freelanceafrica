@@ -21,9 +21,9 @@ register = template.Library()
 # def google_analytics():
 #     pass
 
-# @register.inclusion_tag('navbar.html')
-# def navbar():
-#     pass
+@register.inclusion_tag('account_settings_nav.html')
+def account_settings_nav():
+    pass
 
 # @register.inclusion_tag('footer.html')
 # def footer():
