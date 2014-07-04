@@ -1,4 +1,47 @@
 {% extends 'base.html' %}
+{% load i18n %}
+{% block body%}
 
-{% block content%}
+<div class="col-md-6 col-md-offset-3">		
+	<form action="" enctype="multipart/form-data" method="post">
+	  {% csrf_token %}
+	  <fieldset>
+	    <legend>{% trans "Create Project" %}</legend>
+	    {{ form.non_field_errors }}
+	    {% for field in form %}
+	    {{ field.errors }}
+	    {% if field.name == 'budget'%}
+	    {{field.label_tag}}
+	    <div class="input-group">
+	        <span class="input-group-addon">US $</span>
+	        {{ field }}
+	        <br>
+	    </div>
+        <br>
+        {% elif field.name == 'time_frame'%}
+        {{field.label_tag}}
+	    <div class="form-group">
+	        <div class="col-sm-6">
+	            {{field}}
+	        </div>
+	        {% elif field.name == 'time_frame_unit'%}
+	        <div class="col-sm-6">
+	            {{field}}
+	        </div>
+	    <br>
+	    </div>
+	    <br>
+		{% else %}
+		<p>
+		{{ field.label_tag }}
+		{{ field }}
+		</p>
+	    {% endif %}
+	    {% endfor %}
+
+
+	  </fieldset>
+	  <input type="submit"  class="btn btn-success btn-block btn-lg"  value="{% trans "Save changes" %}" />
+	</form>
+</div>
 {% endblock %}

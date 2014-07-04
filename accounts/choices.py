@@ -306,3 +306,9 @@ PROFILE_TYPE = (
 	('freelancer', _('Freelancer')),
     ('offerrer', _('Job Offerrer')),
 )
+
+BIDDING_TIME_FRAME_CHOICES = (
+	('days', _('Days')),
+	('weeks', _('Weeks')),
+	('months', _('Months')),
+)

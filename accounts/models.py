@@ -9,30 +9,40 @@ import datetime
 import os
 from PIL import Image
 from django.core.files.storage import default_storage as storage
+from django.core.validators import MaxValueValidator
 
 def get_image_path(instance, filename):
     return os.path.join('mugshots/identification/%s/'%(instance.user.username), filename)
 
 class MyProfile(UserenaBaseProfile):
-    gender               = models.PositiveSmallIntegerField(_('gender'), choices=choices.GENDER_CHOICES, blank=True, default=3)
-    birth_date           = models.DateField(_('birth date'), null=True, blank=True, default=datetime.date(1990,1,1))
-    bio                  = models.TextField(_('short bio'), max_length=250, blank=True)
-    country_of_origin    = models.CharField(_('country of origin'), max_length='50', choices=choices.AFRICAN_COUNTRIES)
-    country_of_residence = models.CharField(_('country of residence'), max_length='50', choices=choices.AFRICAN_COUNTRIES)
-    user                 = models.OneToOneField(User,unique=True,verbose_name=_('user'),related_name='my_profile')
-    location             = models.CharField(_('location'), max_length=50, blank=True)
-    phone                = models.CharField(_('phone'), max_length=20, blank=True)
-    profile_type         = models.CharField(_('profile type'), max_length='20', choices=choices.PROFILE_TYPE, default=1)
-    created              = models.DateTimeField(auto_now_add=True, default=datetime.date.today())
-    industry             = models.CharField(_('industry'), max_length=50, blank=True)
-    company              = models.CharField(_('company'), max_length=50, blank=True)
-    identification       = models.ImageField(max_length=500, upload_to=get_image_path, blank=True, null=True)      
+    gender                     = models.PositiveSmallIntegerField(_('gender'), choices=choices.GENDER_CHOICES, blank=True, default=3)
+    birth_date                 = models.DateField(_('birth date'), null=True, blank=True, default=datetime.date(1990,1,1))
+    country_of_origin          = models.CharField(_('country of origin'), max_length='50', choices=choices.AFRICAN_COUNTRIES)
+    country_of_residence       = models.CharField(_('country of residence'), max_length='50', choices=choices.AFRICAN_COUNTRIES)
+    user                       = models.OneToOneField(User,unique=True,verbose_name=_('user'),related_name='my_profile')
+    location                   = models.CharField(_('location'), max_length=50, blank=True)
+    phone                      = models.CharField(_('phone'), max_length=20, blank=True)
+    profile_type               = models.CharField(_('profile type'), max_length='20', choices=choices.PROFILE_TYPE, default=1)
+    created                    = models.DateTimeField(auto_now_add=True, default=datetime.date.today())
+    identification             = models.ImageField(max_length=500, upload_to=get_image_path, blank=True, null=True)      
+    bio                        = models.TextField(_('short bio'), max_length=250, blank=True)
+    drive                      = models.TextField(_('personal drive'), max_length=20, blank=True)
+    industry                   = models.CharField(_('industry'), max_length=50, blank=True)
+    company                    = models.CharField(_('company'), max_length=50, blank=True)
+    
+    __original_identiification = None
 
-    def save(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        super(MyProfile, self).__init__(*args, **kwargs)
+        self.__original_identification = self.identification
+
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+        if self.identification != self.__original_identification:
+            self.compress_image()
         super(MyProfile, self).save(*args, **kwargs)
         if not self.identification:
             return
-        else:
+        elif self.identification != self.__original_identification:
             self.compress_image()
 
     def compress_image(self):
@@ -91,3 +101,15 @@ class MyProfile(UserenaBaseProfile):
                 return userena_settings.USERENA_MUGSHOT_DEFAULT
             else:
                 return None
+
+# class OfferrerProfile(MyProfile):
+#     profile  = models.OneToOneField(MyProfile, unique=True,verbose_name=_('user'), related_name='offerrer_profile')
+    
+# class FreelancerProfile(MyProfile):
+#     profile = models.OneToOneField(MyProfile, related_name='freelancer_profile')
+
+# class FreelancerSkills(models.Model):
+#     profile = models.ForeignKey(FreelancerProfile)
+#     title   = models.CharField(_('skill'), max_length=50, blank=True)
+
+

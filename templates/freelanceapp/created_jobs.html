@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body%}
+
+	{% for job in created_jobs %}
+	<h3>{{job.name}}</h3>
+	<ul>		
+		<li>I will pay {{job.budget_currency}} {{job.budget}}</li>
+		<li><p>{{job.short_description}}</p></li>
+		<li>Bidding starts on {{job.bidding_startdate}}</li>
+		<li>Bidding ends on {{job.bidding_deadline}}</li>
+		<li>The project will take {{job.time_frame}} {{job.time_frame_unit}}</li>
+	</ul>
+	{% endfor %}
+{% endblock %}

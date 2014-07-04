@@ -55,3 +55,4 @@ staticfiles
 env.sh
 migrations
 media
+heroku_config.sh

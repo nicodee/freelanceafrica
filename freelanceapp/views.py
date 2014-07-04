@@ -1,5 +1,28 @@
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
+from freelanceapp.forms import ProjectForm
+from freelanceapp.models import Project
+from django.contrib.auth.decorators import login_required
+from userena.decorators import secure_required
+from guardian.decorators import permission_required_or_403
+from userena.utils import signin_redirect, get_profile_model, get_user_model
+from django.views.generic import TemplateView
+from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
+
+
+class ExtraContextTemplateView(TemplateView):
+    """ Add extra context to a simple template view """
+    extra_context = None
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ExtraContextTemplateView, self).get_context_data(*args, **kwargs)
+        if self.extra_context:
+            context.update(self.extra_context)
+        return context
+
+    # this view is used in POST requests, e.g. signup when the form is not valid
+    post = TemplateView.get
 
 def index(request, template="freelanceapp/index.html", context=None):
 	if request.user.is_authenticated:
@@ -26,9 +49,52 @@ def blog(request, template="freelanceapp/blog.html", context=None):
 		context = {'user':request.user}
 	return render_to_response(template, context)
 
-def create_job(request, template="freelanceapp/job/create_job.html", context=None):
+
+@login_required
+def create_job(request, template_name="freelanceapp/job/create_job.html", project_form=ProjectForm, extra_context=None, **kwargs):
 	if request.user.is_authenticated:
-		context = {'user':request.user}
-	return render_to_response(template, context)
+		profile = request.user.get_profile()
+		form = project_form()
+		if request.method == 'POST':
+			form = project_form(request.POST)
 
+			if form.is_valid():
+				def project_exists():
+					return Project.objects.filter(profile=profile, name=request.POST.get('name')).exists()
+					
+				if not project_exists():
+					new_project = Project(profile=profile,
+										name=request.POST.get('name'),
+										short_description=request.POST.get('short_description'),
+										time_frame=request.POST.get('time_frame'),
+										bidding_deadline=request.POST.get('bidding_deadline'),
+										bidding_startdate=request.POST.get('bidding_startdate'),
+										budget=request.POST.get('budget')	
+										)
+					new_project.save()
 
+					return redirect("/accounts/%s/jobs" %(request.user.username))
+
+		if not extra_context: extra_context = dict()
+		extra_context['form'] = form
+		extra_context['profile'] = profile
+
+	return ExtraContextTemplateView.as_view(template_name=template_name,
+                                            extra_context=extra_context)(request)
+
+@secure_required
+def created_jobs(request, username, template_name="freelanceapp/created_jobs.html", extra_context=None, **kwargs):
+	user    = get_object_or_404(get_user_model(), username__iexact=username)
+	profile = user.get_profile()
+
+	if user == request.user:
+		profile      = user.get_profile()
+		created_jobs = Project.objects.filter(profile=profile)
+
+		if not extra_context: extra_context = dict()
+		extra_context['user']      = request.user
+		extra_context['profile']      = profile
+		extra_context['created_jobs'] = created_jobs
+		return render_to_response(template_name,extra_context)
+
+	return redirect("/")

@@ -59,6 +59,7 @@
                       </a>
 			          <ul class="dropdown-menu" role="menu">			            
 				        <li><a href="{% url 'userena_profile_detail' user.username %}">View profile</a></li>
+				        <li><a href="{% url 'created-jobs' user.username %}">My Create Projects</a></li>
 			            <li><a href="/accounts/{{user.username}}/settings">Settings</a></li>
 			            <li class="divider"></li>
 				        <li><a href="{% url 'userena_profile_edit' user.username %}">Edit profile</a></li>
@@ -95,7 +96,7 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- // <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> -->
     <script src="{% static 'assets/jquery-2.0.3.min.js' %}"></script>
     <script src="{% static 'assets/bs/js/bs.min.js' %}"></script>
     <script src="{% static 'assets/bs/js/jb.min.js' %}"></script>
