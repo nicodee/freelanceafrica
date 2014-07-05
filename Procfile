@@ -1,1 +1,1 @@
-web: gunicorn freelanceproject.wsgi
+web: newrelic-admin run-program gunicorn freelaceproject.wsgi
