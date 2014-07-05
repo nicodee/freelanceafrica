@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from userena.models import UserenaBaseProfile
 from userena import settings as userena_settings
 from userena.utils import get_gravatar
-from freelanceproject import choices
+from accounts import choices
 import datetime
 import os
 from PIL import Image
