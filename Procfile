@@ -1,1 +1,1 @@
-NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn freelaceproject.wsgi
+web: newrelic-admin run-program python freelanceproject/manage.py run_gunicorn -b "0.0.0.0:$PORT" -w 3
