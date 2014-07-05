@@ -56,3 +56,4 @@ env.sh
 migrations
 media
 heroku_config.sh
+remove.sh

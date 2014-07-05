@@ -60,6 +60,7 @@
 			          <ul class="dropdown-menu" role="menu">			            
 				        <li><a href="{% url 'userena_profile_detail' user.username %}">View profile</a></li>
 				        <li><a href="{% url 'created-jobs' user.username %}">My Create Projects</a></li>
+				        <li><a href="{% url 'create-job'%}">Create Project</a></li>
 			            <li><a href="/accounts/{{user.username}}/settings">Settings</a></li>
 			            <li class="divider"></li>
 				        <li><a href="{% url 'userena_profile_edit' user.username %}">Edit profile</a></li>
