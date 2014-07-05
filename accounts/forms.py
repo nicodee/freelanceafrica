@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from userena.forms import SignupFormTos, AuthenticationForm, ChangeEmailForm, EditProfileForm, SignupFormOnlyEmail
 from userena.utils import get_profile_model
-from freelanceproject import choices
+from accounts import choices
 USERNAME_RE = r'^[\.\w]+$'
 
 
