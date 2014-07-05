@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '$a3+shooxf&f*%o=kd97t=#d!_pvb@_d9g9mrk$h#(0(+k0((9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = True
 
@@ -202,7 +202,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
 if not DEBUG:
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-    NAME_DEVELOPER = 'NICODEMUS NUTSUKPUI'
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
     AWS_QUERYSTRING_AUTH = False
