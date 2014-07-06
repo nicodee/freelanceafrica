@@ -1,0 +1,147 @@
+/*!
+ * bootstrap-tokenfield
+ * https://github.com/sliptree/bootstrap-tokenfield
+ * Copyright 2013-2014 Sliptree and other contributors; Licensed MIT
+ */
+/* General Typeahead styling, from http://jsfiddle.net/ragulka/Dy9au/1/ */
+.twitter-typeahead {
+  width: 100%;
+  position: relative;
+  vertical-align: top;
+}
+.twitter-typeahead .tt-input,
+.twitter-typeahead .tt-hint {
+  margin: 0;
+  width: 100%;
+  vertical-align: middle;
+  background-color: #ffffff;
+}
+.twitter-typeahead .tt-hint {
+  color: #fff;
+  z-index: 1;
+  border: 1px solid transparent;
+}
+.twitter-typeahead .tt-input {
+  color: #fff;
+  z-index: 2;
+}
+.twitter-typeahead .tt-input,
+.twitter-typeahead .tt-hint {
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+}
+.twitter-typeahead .input-sm.tt-input,
+.twitter-typeahead .hint-sm.tt-hint {
+  border-radius: 3px;
+}
+.twitter-typeahead .input-lg.tt-input,
+.twitter-typeahead .hint-lg.tt-hint {
+  border-radius: 6px;
+}
+.input-group .twitter-typeahead:first-child .tt-input,
+.input-group .twitter-typeahead:first-child .tt-hint {
+  border-radius: 4px 0 0 4px !important;
+}
+.input-group .twitter-typeahead:last-child .tt-input,
+.input-group .twitter-typeahead:last-child .tt-hint {
+  border-radius: 0 4px 4px 0 !important;
+}
+.input-group.input-group-sm .twitter-typeahead:first-child .tt-input,
+.input-group.input-group-sm .twitter-typeahead:first-child .tt-hint {
+  border-radius: 3px 0 0 3px !important;
+}
+.input-group.input-group-sm .twitter-typeahead:last-child .tt-input,
+.input-group.input-group-sm .twitter-typeahead:last-child .tt-hint {
+  border-radius: 0 3px 3px 0 !important;
+}
+.input-sm.tt-input,
+.hint-sm.tt-hint,
+.input-group.input-group-sm .tt-input,
+.input-group.input-group-sm .tt-hint {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.input-group.input-group-lg .twitter-typeahead:first-child .tt-input,
+.input-group.input-group-lg .twitter-typeahead:first-child .tt-hint {
+  border-radius: 6px 0 0 6px !important;
+}
+.input-group.input-group-lg .twitter-typeahead:last-child .tt-input,
+.input-group.input-group-lg .twitter-typeahead:last-child .tt-hint {
+  border-radius: 0 6px 6px 0 !important;
+}
+.input-lg.tt-input,
+.hint-lg.tt-hint,
+.input-group.input-group-lg .tt-input,
+.input-group.input-group-lg .tt-hint {
+  height: 45px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+}
+
+.tt-suggestion {
+  display: block;
+  padding: 3px 20px;
+}
+
+.tt-suggestion.tt-cursor {
+  color: #fff;
+}
+
+.tt-suggestion.tt-cursor a {
+  color: #ffffff;
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+.tt-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  background-color: #62C8BF;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+.tt-suggestion > p {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.428571429;
+  color: #333333;
+  white-space: nowrap;
+}
+.tt-suggestion > p:hover,
+.tt-suggestion > p:focus,
+.tt-suggestion.tt-cursor p {
+  color: #fff;
+  text-decoration: none;
+  outline: 0;
+}
+
+.tokenfield .token .token-label,
+.tokenfield .token .close {
+  color: #000;
+}
+
+.tokenfield .token .close {
+  opacity: .3;
+}

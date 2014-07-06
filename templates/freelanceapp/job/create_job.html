@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% load i18n %}
-{% block body%}
 
+{% block extra_stylesheets %}
+<link rel="stylesheet" href="{% static 'assets/tag/css/bootstrap-tokenfield.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/tag/css/tokenfield-typeahead.css' %}">
+{% endblock %}
+
+{% block body%}
 <div class="col-md-6 col-md-offset-3">		
 	<form action="" enctype="multipart/form-data" method="post">
 	  {% csrf_token %}
@@ -17,7 +23,6 @@
 	        {{ field }}
 	        <br>
 	    </div>
-        <br>
         {% elif field.name == 'time_frame'%}
         {{field.label_tag}}
 	    <div class="form-group">
@@ -28,7 +33,7 @@
 	        <div class="col-sm-6">
 	            {{field}}
 	        </div>
-	    <br>
+		    <br>
 	    </div>
 	    <br>
 		{% else %}
@@ -38,10 +43,36 @@
 		</p>
 	    {% endif %}
 	    {% endfor %}
-
-
 	  </fieldset>
 	  <input type="submit"  class="btn btn-success btn-block btn-lg"  value="{% trans "Save changes" %}" />
 	</form>
 </div>
 {% endblock %}
+
+{% block extra_script %}
+<script src="{% static 'assets/typeahead.js' %}"></script>
+<script src="{% static 'assets/tag/js/bootstrap-tokenfield.min.js' %}"></script>
+<script>
+	var engine = new Bloodhound({
+	  local: {{skills|safe}},
+	  datumTokenizer: function(d) {
+	    return Bloodhound.tokenizers.whitespace(d.value); 
+	  },
+	  queryTokenizer: Bloodhound.tokenizers.whitespace    
+	});
+
+	engine.initialize();
+
+	$('#id_skills').tokenfield({
+	  typeahead: [null, { source: engine.ttAdapter() }]
+	});
+	
+	$('#id_skills').on('tokenfield:createtoken', function (event) {
+	    var existingTokens = $(this).tokenfield('getTokens');
+	    $.each(existingTokens, function(index, token) {
+	        if (token.value === event.attrs.value)
+	            event.preventDefault();
+	    });
+	});
+</script>
+{%endblock%}

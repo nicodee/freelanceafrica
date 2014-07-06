@@ -13,6 +13,7 @@
     <link href="{% static 'assets/bs/css/jb.min.css' %}" rel="stylesheet">
     <link href="{% static 'freelanceapp/stylesheets/freelanceapp_base.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'assets/fa/css/fa.min.css' %}">
+    {% block extra_stylesheets %}{% endblock %}
     <title>{% block title %}{% endblock %}Freelance Africa</title>
 	{% block meta %}{% endblock %}
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -40,11 +41,10 @@
 			    <!-- Collect the nav links, forms, and other content for toggling -->
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		          <ul class="nav navbar-nav">		        	
-			        <li><a href="/about">ABOUT</a></li>
-			        <li><a href="/blog">BLOG</a></li>
-			        <!-- <li><a href="/job/create">PROJECTS</a></li> -->
-			        <li><a href="/job">PROJECTS</a></li>
-			        <li><a href="/freelancer">FREELANCERS</a></li>
+			        <li><a href="{% url 'freelanceapp_about' %}">ABOUT</a></li>
+			        <li><a href="{% url 'freelanceapp_blog' %}">BLOG</a></li>
+			        <li><a href="{% url 'freelanceapp_jobs' %}">PROJECTS</a></li>
+			        <li><a href="{% url 'freelanceapp_freelancers' %}">FREELANCERS</a></li>
 			        <li class="dropdown">
 			      {% if user.is_authenticated %}
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-bottom:10px;" id="mugshot">
@@ -59,15 +59,15 @@
                       </a>
 			          <ul class="dropdown-menu" role="menu">			            
 				        <li><a href="{% url 'userena_profile_detail' user.username %}">View profile</a></li>
-				        <li><a href="{% url 'created-jobs' user.username %}">My Create Projects</a></li>
-				        <li><a href="{% url 'create-job'%}">Create Project</a></li>
-			            <li><a href="/accounts/{{user.username}}/settings">Settings</a></li>
+				        <li><a href="{% url 'freelanceapp_created_jobs' user.username %}">Created Projects</a></li>
+				        <li><a href="{% url 'freelanceapp_create_job'%}">Post A Project</a></li>
+			            <li><a href="#">Settings</a></li>
 			            <li class="divider"></li>
 				        <li><a href="{% url 'userena_profile_edit' user.username %}">Edit profile</a></li>
 			            <li><a href="{% url 'userena_email_change' user.username %}">Change email</a></li>
 			            <li><a href="{% url 'userena_password_change' user.username %}">Change password</a></li>
 			            <li class="divider"></li>
-				        <li><a href="/signout">LOG OUT</a></li>
+				        <li><a href="{% url 'userena_signout' %}">LOG OUT</a></li>
 			          </ul>
 			      {% else %}
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-bottom:10px;">
@@ -75,8 +75,8 @@
                         <b class="caret"></b>
 			          </a>
 			          <ul class="dropdown-menu" role="menu">			          	
-				        <li><a href="/signup">SIGNUP</a></li>
-				        <li><a href='/signin'>LOG IN</a></li>
+				        <li><a href="{% url 'accounts_signup' %}">SIGNUP</a></li>
+				        <li><a href="{% url 'accounts_signin' %}">LOG IN</a></li>
 			          </ul>
 				      {% endif %}
 			        </li>
@@ -97,11 +97,9 @@
     </footer>
 
     <!-- JavaScript -->
-    <!-- // <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> -->
     <script src="{% static 'assets/jquery-2.0.3.min.js' %}"></script>
     <script src="{% static 'assets/bs/js/bs.min.js' %}"></script>
     <script src="{% static 'assets/bs/js/jb.min.js' %}"></script>
-    {% block extra_script%}
-    {% endblock %}
+    {% block extra_script%}{% endblock %}
   </body>
 </html>

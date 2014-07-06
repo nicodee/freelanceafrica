@@ -1,8 +1,18 @@
 {% extends 'userena/base_userena.html' %}
+{% load staticfiles %}
+{% load freelanceapp_tags %}
 {% load i18n %}
 {% load url from future %}
 
 {% block title %}{% trans "Account setup" %}{% endblock %}
+
+{% block extra_stylesheets %}
+    {% if profile.profile_type == "freelancer"%}
+    <link rel="stylesheet" href="{% static 'assets/tag/css/bootstrap-tokenfield.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/tag/css/tokenfield-typeahead.css' %}">
+    {% endif %}
+{% endblock %}
+
 {% block content %}
 <form action="" enctype="multipart/form-data" method="post">
   {% csrf_token %}
@@ -58,7 +68,44 @@
     </p>
     {% endif %}
     {% endfor %}
+    {% if profile.profile_type == "freelancer"%}
+    <p>
+    <label for="id_skillset">Top skills:</label>
+    <input class="form-control" id="id_skillset" name="skillset" type="text" value="{{profile|get_skills_tags}}">
+    </p>
+    {% endif %}
   </fieldset>
   <input type="submit"  class="btn btn-success btn-block btn-lg"  value="{% trans "Save changes" %}" />
+
 </form>
 {% endblock %}
+
+{% block extra_script %}
+    {% if profile.profile_type == "freelancer"%}
+    <script src="{% static 'assets/typeahead.js' %}"></script>
+    <script src="{% static 'assets/tag/js/bootstrap-tokenfield.min.js' %}"></script>
+    <script>
+        var engine = new Bloodhound({
+          local: {{skills|safe}},
+          datumTokenizer: function(d) {
+            return Bloodhound.tokenizers.whitespace(d.value); 
+          },
+          queryTokenizer: Bloodhound.tokenizers.whitespace    
+        });
+
+        engine.initialize();
+
+        $('#id_skillset').tokenfield({
+          typeahead: [null, { source: engine.ttAdapter() }]
+        });
+        
+        $('#id_skillset').on('tokenfield:createtoken', function (event) {
+            var existingTokens = $(this).tokenfield('getTokens');
+            $.each(existingTokens, function(index, token) {
+                if (token.value === event.attrs.value)
+                    event.preventDefault();
+            });
+        });
+    </script>
+    {% endif %}
+{%endblock%}

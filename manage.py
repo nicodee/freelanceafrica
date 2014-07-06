@@ -7,8 +7,10 @@ if __name__ == "__main__":
 
     from django.core.management import execute_from_command_line
     import freelanceproject.startup as startup
+    import freelanceapp.skillset as skillset
     try:
     	startup.run()
+    	# skillset.create_base_skills()
     except:
     	pass
 

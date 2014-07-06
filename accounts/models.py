@@ -10,6 +10,7 @@ import os
 from PIL import Image
 from django.core.files.storage import default_storage as storage
 from django.core.validators import MaxValueValidator
+from taggit.managers import TaggableManager
 
 def get_image_path(instance, filename):
     return os.path.join('mugshots/identification/%s/'%(instance.user.username), filename)
@@ -29,12 +30,16 @@ class MyProfile(UserenaBaseProfile):
     drive                      = models.TextField(_('personal drive'), max_length=20, blank=True)
     industry                   = models.CharField(_('industry'), max_length=50, blank=True)
     company                    = models.CharField(_('company'), max_length=50, blank=True)
+    skills                     = TaggableManager()
     
     __original_identiification = None
 
     def __init__(self, *args, **kwargs):
         super(MyProfile, self).__init__(*args, **kwargs)
         self.__original_identification = self.identification
+
+    def __str__(self):
+        return self.user.username
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         if self.identification != self.__original_identification:
@@ -102,14 +107,6 @@ class MyProfile(UserenaBaseProfile):
             else:
                 return None
 
-# class OfferrerProfile(MyProfile):
-#     profile  = models.OneToOneField(MyProfile, unique=True,verbose_name=_('user'), related_name='offerrer_profile')
-    
-# class FreelancerProfile(MyProfile):
-#     profile = models.OneToOneField(MyProfile, related_name='freelancer_profile')
 
-# class FreelancerSkills(models.Model):
-#     profile = models.ForeignKey(FreelancerProfile)
-#     title   = models.CharField(_('skill'), max_length=50, blank=True)
 
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body%}
-
+<div class="col-md-8 col-md-offset-2">
 	{% for job in created_jobs %}
 	<h3>{{job.name}}</h3>
 	<ul>		
@@ -10,6 +10,14 @@
 		<li>Bidding starts on {{job.bidding_startdate}}</li>
 		<li>Bidding ends on {{job.bidding_deadline}}</li>
 		<li>The project will take {{job.time_frame}} {{job.time_frame_unit}}</li>
+		<li>The project will require these skills: 
+			<ul>
+		        {% for tag in job.skills.all %}
+		            <li> {{ tag.name }} </li>
+		        {% endfor %}
+		    </ul>
+	    </li>
 	</ul>
 	{% endfor %}
+</div>
 {% endblock %}
