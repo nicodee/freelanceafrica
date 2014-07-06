@@ -1,7 +1,7 @@
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from freelanceapp.forms import ProjectForm
-from freelanceapp.models import Project
+from freelanceapp.models import Project, SkillSet
 from django.contrib.auth.decorators import login_required
 from userena.decorators import secure_required
 from guardian.decorators import permission_required_or_403
@@ -9,7 +9,8 @@ from userena.utils import signin_redirect, get_profile_model, get_user_model
 from django.views.generic import TemplateView
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
-
+from freelanceapp.skillset import create_base_skills
+import json
 
 class ExtraContextTemplateView(TemplateView):
     """ Add extra context to a simple template view """
@@ -67,15 +68,18 @@ def create_job(request, template_name="freelanceapp/job/create_job.html", projec
 										name=request.POST.get('name'),
 										short_description=request.POST.get('short_description'),
 										time_frame=request.POST.get('time_frame'),
+										time_frame_unit=request.POST.get('time_frame_unit'),
 										bidding_deadline=request.POST.get('bidding_deadline'),
 										bidding_startdate=request.POST.get('bidding_startdate'),
-										budget=request.POST.get('budget')	
+										budget=request.POST.get('budget')
 										)
 					new_project.save()
-
+					new_project.skills.add(*request.POST.get('skills').lower().split(", "))
+					result  = create_base_skills(request.POST.get('skills').split(", "))
 					return redirect("/accounts/%s/jobs" %(request.user.username))
 
 		if not extra_context: extra_context = dict()
+		extra_context['skills'] = json.dumps([ob.as_json() for ob in SkillSet.objects.all()])
 		extra_context['form'] = form
 		extra_context['profile'] = profile
 

@@ -12,6 +12,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from freelanceapp.models import SkillSet
+from freelanceapp.skillset import create_base_skills
+import json
 
 class ExtraContextTemplateView(TemplateView):
     """ Add extra context to a simple template view """
@@ -106,6 +109,14 @@ def profile_edit_main(request, username, edit_profile_form=EditFreelancerProfile
 
         if form.is_valid():
             profile = form.save()
+            skillset = request.POST.get('skillset')
+            if skillset == None:
+                pass
+            elif skillset == "":
+                profile.skills.clear()
+            else:
+                profile.skills.set(*skillset.lower().split(", "))
+                result  = create_base_skills(skillset.split(", "))
 
             if userena_settings.USERENA_USE_MESSAGES:
                 messages.success(request, _('Your profile has been updated.'),
@@ -120,6 +131,7 @@ def profile_edit_main(request, username, edit_profile_form=EditFreelancerProfile
             return redirect(redirect_to)
 
     if not extra_context: extra_context = dict()
+    extra_context['skills'] = json.dumps([ob.as_json() for ob in SkillSet.objects.all()])
     extra_context['form'] = form
     extra_context['profile'] = profile
     return ExtraContextTemplateView.as_view(template_name=template_name,

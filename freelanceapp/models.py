@@ -1,4 +1,5 @@
 from django.db import models
+from taggit.managers import TaggableManager
 from django.utils.translation import ugettext as _  
 from accounts.models import MyProfile
 from accounts import choices
@@ -18,6 +19,7 @@ class Project(models.Model):
 	budget            = models.CharField(_('project budget'), null=True, blank=True, max_length=50)  
 	created           = models.DateTimeField(auto_now_add=True, default=datetime.date.today())
 	slug              = models.SlugField(max_length=255, default=datetime.date.today())
+	skills            = TaggableManager()
 
 	def save(self, *args, **kwargs):
 		if not self.id:
@@ -26,3 +28,19 @@ class Project(models.Model):
 
 
 
+# class Skill(models.Model):
+	# pass
+
+class SkillSet(models.Model):
+	value = models.CharField(_('skill'), unique=True, max_length=50, null=False, blank=False)
+	created = models.DateTimeField(auto_now_add=True, default=datetime.date.today())
+
+	class Meta:
+		ordering = ["value"]
+
+	def titled(self):
+		"Returns skill in upper case format eg. 'web developer' becomes 'WEB DEVELOPER'"
+		return self.value.upper()
+
+	def as_json(self):
+		return dict(value=self.titled())

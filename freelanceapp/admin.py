@@ -1,5 +1,5 @@
 from django.contrib import admin
-from freelanceapp.models import Project
+from freelanceapp.models import Project, SkillSet
 
 class ProjectAdmin(admin.ModelAdmin):
 	fieldsets = [
@@ -13,19 +13,16 @@ class ProjectAdmin(admin.ModelAdmin):
 					('Time frame', {'fields': ['time_frame']}),
 					('Duration unit', {'fields': ['time_frame_unit']}),
 					('Slug', {'fields': ['slug']}),
+					('Skills', {'fields': ['skills']}),
 			    ]
 
 	list_display  = ('name', 'created', 'budget', 'slug')
-	# inlines = [RewardInline]
-	# inlines = [MilestoneInline]
-	# inlines = [BankAccountInline]
-	# list_display = ('name', 'goal', 'profile')
-	# list_filter = ['approved', 'status', 'category', 'name', 'goal', 'profile']
-	# search_fields = ['name','goal', 'duration', 'category']
-	# date_hierarchy = 'start_date'
 	
-
+class SkillSetAdmin(admin.ModelAdmin):
+	fieldsets =[('Skill', {'fields': ['value']}),]
+	list_display  = ('value', 'created')
 
 
 
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(SkillSet, SkillSetAdmin)

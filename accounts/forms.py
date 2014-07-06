@@ -121,7 +121,7 @@ class EditOfferrerProfileForm(EditProfileForm):
 
     class Meta:
         model = get_profile_model()
-        exclude = ['user', 'privacy', 'drive']
+        exclude = ['user', 'privacy', 'drive', 'skills']
 
     def __init__(self, *args, **kw):
         """
@@ -182,11 +182,10 @@ class EditFreelancerProfileForm(EditProfileForm):
 
     attrs_dict = ({'type': 'text', 'class': 'form-control', 'name': 'phone' })
     phone = forms.CharField(label=_(u'Phone no:'), widget=forms.TextInput(attrs=attrs_dict), required=False)
-
     
     class Meta:
         model = get_profile_model()
-        exclude = ['user', 'privacy', 'industry', 'company']
+        exclude = ['user', 'privacy', 'industry', 'company', 'skills']
 
     def __init__(self, *args, **kw):
         """

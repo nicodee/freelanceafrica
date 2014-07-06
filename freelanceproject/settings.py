@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'accounts',
     'storages',
+    'taggit',
 )
 
 SITE_ID = 1
@@ -199,6 +200,12 @@ SOCIALACCOUNT_PROVIDERS = {
         'METHOD': 'js_sdk'  # instead of 'oauth2'
     }
 }
+
+SOUTH_MIGRATION_MODULES = {
+    'taggit': 'taggit.south_migrations',
+    'easy_thumbnails': 'easy_thumbnails.south_migrations',
+}
+
 
 if not DEBUG:
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
