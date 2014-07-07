@@ -57,3 +57,4 @@ migrations
 media
 heroku_config.sh
 remove.sh
+settings.pyc

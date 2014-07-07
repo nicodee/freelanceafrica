@@ -4,7 +4,7 @@ from userena.decorators import secure_required
 from guardian.decorators import permission_required_or_403
 from userena.utils import signin_redirect, get_profile_model, get_user_model
 from userena.forms import EditProfileForm
-from accounts.forms import EditFreelancerProfileForm, EditOfferrerProfileForm
+from accounts.forms import EditFreelancerProfileForm, EditOfferrerProfileForm, SignupFormOnlyEmailExtra, AuthenticationFormExtra
 from django.views.generic import TemplateView
 from userena import signals as userena_signals
 from userena import settings as userena_settings
@@ -38,13 +38,16 @@ def profile_edit(requests, username, extra_context=None, **kwargs):
     profile = user.get_profile()
 
     if profile.profile_type == "freelancer":
-        return redirect("/accounts/freelancer/%s/edit" %user.username)
+        redirect_to = reverse('accounts_freelancer_edit', kwargs={'username': username})
+        return redirect(redirect_to)
     elif profile.profile_type == "offerrer":
-        return redirect("/accounts/offerrer/%s/edit" %user.username)
+        redirect_to = reverse('accounts_offerrer_edit', kwargs={'username': username})
+        return redirect(redirect_to)
     else:
-        return redirect("/accounts/freelancer/%s/edit" %user.username)
-        
+        redirect_to = reverse('accounts_freelancer_edit', kwargs={'username': username})
+        return redirect(redirect_to)   
     return redirect("/")	
+
 
 
 @secure_required
@@ -137,3 +140,52 @@ def profile_edit_main(request, username, edit_profile_form=EditFreelancerProfile
     return ExtraContextTemplateView.as_view(template_name=template_name,
                                             extra_context=extra_context)(request)
 
+
+@secure_required
+def user_authentication(request, signup_form=SignupFormOnlyEmailExtra, auth_form=AuthenticationFormExtra,
+                        template_name='accounts/user_authentication.html', success_url=None, extra_context=None, **kwargs):
+    """
+    Signup/Signin of an account.
+
+    Signup requiring an email and password. After signup a user gets
+    an email with an activation link used to activate their account. After
+    successful signup redirects to ``success_url``.
+
+    Signin requiring an email and password. After signin a user is redirected to his profile page.
+
+    :param signup_form:
+        Form that will be used to signup a user.
+
+    :param auth_form:
+        Form that will be used to signin a user.
+
+    :param template_name:
+        String containing the template name that will be used to display both
+        signup and signin  forms.
+
+    :param extra_context:
+        Dictionary containing variables which are added to the template
+        context. Defaults to a dictionary with ``form_signup and form_signin`` keys containing the
+        ``signup_form and signin_form``.
+
+    **Context**
+
+    ``form_signup``
+        Form supplied by ``signup_form``.
+
+    ``form_signin``
+        Form supplied by ``auth_form``.
+
+    """
+    if request.user.is_authenticated():
+        redirect_to = reverse('userena_profile_detail', kwargs={'username': request.user.username})
+        return redirect(redirect_to)
+        
+    form_signup = signup_form()
+    form_signin = auth_form()
+
+    if not extra_context: extra_context = dict()
+    extra_context['form_signup'] = form_signup
+    extra_context['form_signin'] = form_signin
+    return ExtraContextTemplateView.as_view(template_name=template_name,
+                                            extra_context=extra_context)(request)

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans "Signin" %}{% endblock %}
+
+{% block extra_stylesheets %}
+  <link rel="stylesheet" href="{% static 'assets/tabulous/tabulous.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    
+    <div id="tabs">
+      <ul style="padding-left: 0px;">
+        <li><a href="#tabs-1" class="tabs" title="">SIGN UP</a></li>
+        <li><a href="#tabs-2" class="tabs" title="">SIGN IN</a></li>
+      </ul>
+      <div id="tabs_container">
+        <div id="tabs-1">
+          <!--tab content-->
+            <form action="{% url 'accounts_signup' %}" method="post">
+              {% csrf_token %}
+              <fieldset>
+                {{ form_signup.non_field_errors }}
+                {% for field in form_signup %}
+                {{ field.errors }}
+                {% comment %} Displaying checkboxes differently {% endcomment %}
+                {% if field.name == 'tos' %}
+                <p class="checkbox">
+                <label for="id_{{ field.name }}">{{ field }} {{ field.label }}</label>
+                </p>
+                {% else %}
+                <p>
+                {{ field }}
+                </p>
+                {% endif %}
+                {% endfor %}
+              </fieldset>
+              <input type="submit"  class="btn btn-success btn-block btn-lg"  value="{% trans "Signup"%}" />
+            </form>
+        </div>
+
+        <div id="tabs-2">
+             <!--tab content-->
+            <form action="{% url 'accounts_signin' %}" method="post">
+              {% csrf_token %}
+              <fieldset>
+                {{ form_signin.non_field_errors }}
+                {% for field in form_signin %}
+                {{ field.errors }}
+                {% comment %} Displaying checkboxes differently {% endcomment %}
+                {% if field.name == 'remember_me' %}
+                <p class="checkbox">
+                <label for="id_{{ field.name }}">{{ field }} {{ field.label }}</label>
+                </p>
+                {%elif field.name == 'identification'%}
+                <p>
+                <input class="form-control required" id="id_identification" maxlength="75" name="identification" placeholder="Email" required="true" type="email">
+                </p>
+                {% else %}
+                <p>
+                {{ field }}
+                </p>
+                {% endif %}
+                {% endfor %}
+              </fieldset>
+              <input type="submit"  class="btn btn-success btn-block btn-lg"  value="{% trans "Signin" %}" />
+              <p class="forgot-password text-center"><a href="{% url 'userena_password_reset' %}" title="{% trans 'Forgot your password?' %}">{% trans "Forgot your password?" %}</a></p>
+              {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+            </form>
+        </div>
+      </div><!--End tabs container--> 
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_script%}
+  <script type="text/javascript" src="{% static 'assets/tabulous/tabulous.min.js' %}"></script>
+  <script>
+    $(document).ready(function ($) {
+      $('#tabs').tabulous();
+    });
+  </script>
+{% endblock %}

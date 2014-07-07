@@ -17,12 +17,12 @@
   background-color: #ffffff;
 }
 .twitter-typeahead .tt-hint {
-  color: #fff;
+  /*color: #fff;*/
   z-index: 1;
   border: 1px solid transparent;
 }
 .twitter-typeahead .tt-input {
-  color: #fff;
+  /*color: #fff;*/
   z-index: 2;
 }
 .twitter-typeahead .tt-input,

@@ -2,7 +2,8 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:400,900);
 
 body {
-  background: #7A8498; 
+  /*background: #7A8498; */
+  background: #fff; 
   margin: 0; 
   height: 100%;
   font-family: 'Lato', sans-serif;
@@ -53,11 +54,7 @@ body {
 
 /* making navbar content centered */
 .navbar-collapse.collapse {
-  text-align: center; /* Set this */
-  display: block !important;
-  height: auto !important;
-  padding-bottom: 0;
-  overflow: visible !important;
+  text-align: center; 
 }
 
 .navbar-nav {
@@ -78,7 +75,8 @@ form label {
   display: inline-block;
   margin-bottom: 5px;
   font-weight: 300;
-  color: #c9c9c9;
+  /*color: #c9c9c9;*/
+  color: #000;
 }
 
 #mugshot{
@@ -103,7 +101,7 @@ p {
 }
 
 a {
-  color: #fff; 
+  /*color: #fff; */
   padding: 0;
   margin: 0;
   text-decoration: none; 
@@ -162,8 +160,8 @@ footer {
   padding: 10px;
   border: solid 3px #c9c9c9;
   transition: border 0.3s;
-  background-color: #5A606F;
-  color: #c9c9c9;
+  /*background-color: #5A606F;*/
+  /*color: #c9c9c9;*/
 }
 
 .form-control:focus,
@@ -176,23 +174,27 @@ input[type="date"] {
 }
 
 .btn-success {
-  color: #fff;
-  background-color: #62C8BF;
-  border-color: #62C8BF;
+  /*color: #fff;*/
+  /*background-color: #62C8BF;*/
+  /*border-color: #62C8BF;*/
 }
 
 .btn-success:hover {
-  background-color: #41ADA4;
-  border-color: #41ADA4;
+  /*background-color: #41ADA4;*/
+  /*border-color: #41ADA4;*/
 }
 
 .btn-default {
   padding: 10px;
-  color: #c9c9c9;
-  background-color: #5A606F;
+  /*color: #c9c9c9;*/
+  /*background-color: #5A606F;*/
   border: solid 3px #c9c9c9;
 }
 
 .thumbnail {
   border: solid 3px #c9c9c9;  
+}
+
+.errorlist {
+  color: red;
 }
