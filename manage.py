@@ -10,7 +10,7 @@ if __name__ == "__main__":
     import freelanceapp.skillset as skillset
     try:
     	startup.run()
-    	skillset.create_base_skills()
+    	# skillset.create_base_skills()
     except:
     	pass
 
