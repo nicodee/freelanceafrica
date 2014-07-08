@@ -1,4 +1,47 @@
 {% extends 'base.html' %}
+{% load i18n %}
+{% load url from future %}
 
-{% block content%}
+
+{% block body%}
+<div class="col-md-8" id="project">
+	{% for project in project_list %}
+	<h3>{{project.name}}</h3>
+	<ul>
+		<li>I will pay {{project.budget_currency}} {{project.budget}}</li>
+		<li><p>{{project.short_description}}</p></li>
+		<li>Bidding starts on {{project.bidding_startdate}}</li>
+		<li>Bidding ends on {{project.bidding_deadline}}</li>
+		<li>The project will take {{project.time_frame}} {{project.time_frame_unit}}</li>
+		<li>The project will require these skills: 
+			<ul>
+		        {% for tag in project.skills.all %}
+		            <li> {{ tag.name }} </li>
+		        {% endfor %}
+		    </ul>
+	    </li>
+	</ul>
+	<small>Created on: {{project.created}}</small>
+	{% endfor %}
+</div>
+
+{% if is_paginated %}
+<div class="pagination">
+  <span class="step-links">
+    {% if page_obj.has_previous %}
+    <a href="{% url 'freelanceapp_projects_list_paginated' page_obj.previous_page_number %}">{% trans 'previous' %}</a>
+    {% endif %}
+
+    <span class="current">
+      {% blocktrans with page_obj.number as page and page_obj.paginator.num_pages as num_pages %}
+      Page {{ page }} of {{ num_pages }}
+      {% endblocktrans %}
+    </span>
+
+    {% if page_obj.has_next %}
+    <a href="{% url 'freelanceapp_projects_list_paginated'  page_obj.next_page_number %}">{% trans 'next' %}</a>
+    {% endif %}
+  </span>
+</div>
+{% endif %}
 {% endblock %}

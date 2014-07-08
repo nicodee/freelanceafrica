@@ -58,3 +58,4 @@ media
 heroku_config.sh
 remove.sh
 .pyc
+settings.pyc

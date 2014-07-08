@@ -7,9 +7,11 @@ from userena.decorators import secure_required
 from guardian.decorators import permission_required_or_403
 from userena.utils import signin_redirect, get_profile_model, get_user_model
 from django.views.generic import TemplateView
+from django.views.generic.list import ListView
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from freelanceapp.skillset import create_base_skills
+from userena import settings as userena_settings
 import json
 
 class ExtraContextTemplateView(TemplateView):
@@ -25,20 +27,83 @@ class ExtraContextTemplateView(TemplateView):
     # this view is used in POST requests, e.g. signup when the form is not valid
     post = TemplateView.get
 
+class FreelancerProfileListView(ListView):
+    """ Lists all freelancer profiles """
+    context_object_name='profile_list'
+    page=1
+    paginate_by=50
+    template_name="freelanceapp/freelancer.html"
+    extra_context=None
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(FreelancerProfileListView, self).get_context_data(**kwargs)
+        try:
+            page = int(self.request.GET.get('page', None))
+        except (TypeError, ValueError):
+            page = self.page
+
+        if userena_settings.USERENA_DISABLE_PROFILE_LIST \
+           and not self.request.user.is_staff:
+            raise Http404
+
+        if not self.extra_context: self.extra_context = dict()
+
+        context['page'] = page
+        context['paginate_by'] = self.paginate_by
+        context['extra_context'] = self.extra_context
+
+        return context
+
+    def get_queryset(self):
+        profile_model = get_profile_model()
+        queryset = profile_model.objects.get_visible_profiles(self.request.user).select_related().filter(profile_type="freelancer")
+        return queryset
+
+class ProjectListView(ListView):
+    """ Lists all projects """
+    context_object_name='project_list'
+    page=1
+    paginate_by=5
+    template_name="freelanceapp/job/job.html"
+    extra_context=None
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ProjectListView, self).get_context_data(**kwargs)
+        try:
+            page = int(self.request.GET.get('page', None))
+        except (TypeError, ValueError):
+            page = self.page
+
+        if not self.extra_context: self.extra_context = dict()
+
+        context['page'] = page
+        context['paginate_by'] = self.paginate_by
+        context['extra_context'] = self.extra_context
+
+        return context
+
+    def get_queryset(self):
+        projects = Project.objects.all()
+        queryset = projects
+        return queryset
+
 def index(request, template="freelanceapp/index.html", context=None):
 	if request.user.is_authenticated:
 		context = {'user':request.user}
 	return render_to_response(template, context)
 
-def job(request, template="freelanceapp/job/job.html", context=None):
-	if request.user.is_authenticated:
-		context = {'user':request.user}
-	return render_to_response(template, context)
+# def job(request, template="freelanceapp/job/job.html", context=None):
+# 	if request.user.is_authenticated:
+# 		context = {'user':request.user}
+# 	return render_to_response(template, context)
 
-def freelancer(request, template="freelanceapp/freelancer.html", context=None):
-	if request.user.is_authenticated:
-		context = {'user':request.user}
-	return render_to_response(template, context)
+# def freelancer(request, template="freelanceapp/freelancer.html", context=None):
+# 	if request.user.is_authenticated:
+# 		context = {'user':request.user}
+# 	return render_to_response(template, context)
+
 
 def about(request, template="freelanceapp/about.html", context=None):
 	if request.user.is_authenticated:

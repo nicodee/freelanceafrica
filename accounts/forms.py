@@ -14,14 +14,14 @@ class SignupFormOnlyEmailExtra(SignupFormOnlyEmail):
     """
     attrs_dict = {}
 
-    attrs_dict = ({'class':'form-control required', 'placeholder':'Email', 'name':'email', 'type':'email',  'required':'true',  'id':'id_email'})
+    attrs_dict = ({'class':'form-control required', 'required':'required' ,'placeholder':'Email', 'name':'email', 'type':'email',  'required':'true',  'id':'id_email'})
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict, maxlength=75)), label=_("Email"))
 
-    attrs_dict = ({'class':'form-control required', 'placeholder':'Password', 'name':'password1', 'type':'password', 'id':'id_password1'})
+    attrs_dict = ({'class':'form-control required', 'required':'required' ,'placeholder':'Password', 'name':'password1', 'type':'password', 'id':'id_password1'})
     password1 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict, render_value=False), label=_("Create password"))
 
-    attrs_dict = ({'class':'form-control required', 'placeholder':'Confirm password', 'name':'password2', 'type':'password', 'id':'id_password2'})
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict, render_value=False), label=_("Repeat password"))
+    attrs_dict = ({'class':'form-control required', 'required':'required' ,'placeholder':'Confirm password', 'name':'password2', 'type':'password', 'id':'id_password2'})
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict, render_value=False), label=_("Confirm password"))
 
     def save(self, *args, **kwargs):
         new_user = super(SignupFormOnlyEmailExtra, self).save(*args, **kwargs)
@@ -33,7 +33,7 @@ class AuthenticationFormExtra(AuthenticationForm):
     Styling AuthenticationForm with bootstrap.
     """
     attrs_dict = {}
-    attrs_dict = ({'class':'form-control required', 'placeholder':'Password', 'name':'password', 'type':'password', 'id':'id_password'})
+    attrs_dict = ({'class':'form-control required', 'required':'required' ,'placeholder':'Password', 'name':'password', 'type':'password', 'id':'id_password'})
     password = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict, render_value=False), label=_("Password"))
 
 
