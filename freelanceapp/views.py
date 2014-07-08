@@ -28,7 +28,7 @@ class ExtraContextTemplateView(TemplateView):
     post = TemplateView.get
 
 class FreelancerProfileListView(ListView):
-    """ Lists all profiles """
+    """ Lists all freelancer profiles """
     context_object_name='profile_list'
     page=1
     paginate_by=50
@@ -60,15 +60,44 @@ class FreelancerProfileListView(ListView):
         queryset = profile_model.objects.get_visible_profiles(self.request.user).select_related().filter(profile_type="freelancer")
         return queryset
 
+class ProjectListView(ListView):
+    """ Lists all projects """
+    context_object_name='project_list'
+    page=1
+    paginate_by=5
+    template_name="freelanceapp/job/job.html"
+    extra_context=None
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ProjectListView, self).get_context_data(**kwargs)
+        try:
+            page = int(self.request.GET.get('page', None))
+        except (TypeError, ValueError):
+            page = self.page
+
+        if not self.extra_context: self.extra_context = dict()
+
+        context['page'] = page
+        context['paginate_by'] = self.paginate_by
+        context['extra_context'] = self.extra_context
+
+        return context
+
+    def get_queryset(self):
+        projects = Project.objects.all()
+        queryset = projects
+        return queryset
+
 def index(request, template="freelanceapp/index.html", context=None):
 	if request.user.is_authenticated:
 		context = {'user':request.user}
 	return render_to_response(template, context)
 
-def job(request, template="freelanceapp/job/job.html", context=None):
-	if request.user.is_authenticated:
-		context = {'user':request.user}
-	return render_to_response(template, context)
+# def job(request, template="freelanceapp/job/job.html", context=None):
+# 	if request.user.is_authenticated:
+# 		context = {'user':request.user}
+# 	return render_to_response(template, context)
 
 # def freelancer(request, template="freelanceapp/freelancer.html", context=None):
 # 	if request.user.is_authenticated:

@@ -112,7 +112,8 @@
   margin: 2px 0 0;
   list-style: none;
   font-size: 14px;
-  background-color: #62C8BF;
+  /*background-color: #62C8BF;*/
+  background-color: #fff;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
@@ -133,6 +134,8 @@
 .tt-suggestion > p:focus,
 .tt-suggestion.tt-cursor p {
   color: #fff;
+  /*color: #62C8BF;*/
+  background-color: #62C8BF;
   text-decoration: none;
   outline: 0;
 }

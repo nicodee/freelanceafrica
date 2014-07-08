@@ -198,3 +198,8 @@ input[type="date"] {
 .errorlist {
   color: red;
 }
+
+#project {
+  margin: auto;
+  float: none;
+}
