@@ -65,7 +65,12 @@ def run():
             online_site.save()
             SITE_ID = online_site.id
         else:
+            online_site = Site.objects.get(pk=1)
+            online_site.domain = "freelanceafrica-test.herokuapp.com"
+            online_site.name = "Freelance Africa Test"
+            online_site.save()
+            SITE_ID = online_site.id
             # Do something else.
-            pass
+            # pass
     except Exception, e:
         pass
