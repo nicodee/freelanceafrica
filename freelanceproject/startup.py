@@ -3,74 +3,23 @@ from django.core.cache import cache
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+import os
 
 SITE_ID = settings.SITE_ID
+DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
+DISPLAY_NAME = " ".join(os.environ.get('DISPLAY_NAME').split('_'))
 
 def run():
     site = Site.objects.get(pk=1)
-    site.domain = 'localhost:8000'
-    site.name = 'Freelance Africa Development'
+    site.domain = DOMAIN_NAME
+    site.name = DISPLAY_NAME
     site.save()
     SITE_ID = site.id
 
-    # online_site()
-    
     try:
         user = User.objects.get(username="admin")
         if user.is_superuser:
             pass
     except ObjectDoesNotExist, e:
         User.objects.create_superuser('admin', 'nnutsukpui@gmail.com', 'password')
-        pass
-
-# def online_site(request):
-#     site_url = request.get_host()
-    
-#     if("freelanceafrica.herokuapp.com" in site_url):
-#         online_site = Site.objects.get(pk=1)
-#         online_site.domain = "freelanceafrica.herokuapp.com"
-#         online_site.name = "Freelance Africa"
-#         online_site.save()
-#         SITE_ID = online_site.id
-
-#     elif("freelanceafrica-test.herokuapp.com" in site_url):
-#         online_site = Site.objects.get(pk=1)
-#         online_site.domain = "freelanceafrica-test.herokuapp.com"
-#         online_site.name = "Freelance Africa Test"
-#         online_site.save()
-#         SITE_ID = online_site.id    
-
-
-# def online_site():
-    current_site = Site.objects.all()[0]
-    print "============================================="
-    print current_site.domain
-    print "============================================="
-    try:
-        current_site = Site.objects.get_current()
-        print "============================================="
-        print current_site.domain
-        print "============================================="
-        if current_site.domain == "freelanceafrica.herokuapp.com":
-            online_site = Site.objects.get(pk=1)
-            online_site.domain = "freelanceafrica.herokuapp.com"
-            online_site.name = "Freelance Africa"
-            online_site.save()
-            SITE_ID = online_site.id
-
-        elif current_site.domain == "freelanceafrica-test.herokuapp.com":
-            online_site = Site.objects.get(pk=1)
-            online_site.domain = "freelanceafrica-test.herokuapp.com"
-            online_site.name = "Freelance Africa Test"
-            online_site.save()
-            SITE_ID = online_site.id
-        else:
-            online_site = Site.objects.get(pk=1)
-            online_site.domain = "freelanceafrica-test.herokuapp.com"
-            online_site.name = "Freelance Africa Test"
-            online_site.save()
-            SITE_ID = online_site.id
-            # Do something else.
-            # pass
-    except Exception, e:
         pass
