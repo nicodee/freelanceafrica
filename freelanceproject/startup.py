@@ -42,7 +42,7 @@ def run():
 
 
 # def online_site():
-    current_site = Site.objects.get_current()
+    current_site = Site.objects.all()[0]
     print "============================================="
     print current_site.domain
     print "============================================="
