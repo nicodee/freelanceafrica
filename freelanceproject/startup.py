@@ -13,7 +13,7 @@ def run():
     site.save()
     SITE_ID = site.id
 
-    online_site()
+    # online_site()
     
     try:
         user = User.objects.get(username="admin")
@@ -41,9 +41,12 @@ def run():
 #         SITE_ID = online_site.id    
 
 
-def online_site():
+# def online_site():
     try:
         current_site = Site.objects.get_current()
+        print "============================================="
+        print current_site.domain
+        print "============================================="
         if current_site.domain == "freelanceafrica.herokuapp.com":
             online_site = Site.objects.get(pk=1)
             online_site.domain = "freelanceafrica.herokuapp.com"
