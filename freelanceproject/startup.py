@@ -13,6 +13,8 @@ def run():
     site.save()
     SITE_ID = site.id
 
+    online_site()
+    
     try:
         user = User.objects.get(username="admin")
         if user.is_superuser:
@@ -21,19 +23,42 @@ def run():
         User.objects.create_superuser('admin', 'nnutsukpui@gmail.com', 'password')
         pass
 
-def online_site(request):
-    site_url = request.get_host()
+# def online_site(request):
+#     site_url = request.get_host()
     
-    if("freelanceafrica.herokuapp.com" in site_url):
-        online_site = Site.objects.get(pk=1)
-        online_site.domain = "freelanceafrica.herokuapp.com"
-        online_site.name = "Freelance Africa"
-        online_site.save()
-        SITE_ID = online_site.id
+#     if("freelanceafrica.herokuapp.com" in site_url):
+#         online_site = Site.objects.get(pk=1)
+#         online_site.domain = "freelanceafrica.herokuapp.com"
+#         online_site.name = "Freelance Africa"
+#         online_site.save()
+#         SITE_ID = online_site.id
 
-    elif("freelanceafrica-test.herokuapp.com" in site_url):
-        online_site = Site.objects.get(pk=1)
-        online_site.domain = "freelanceafrica-test.herokuapp.com"
-        online_site.name = "Freelance Africa Test"
-        online_site.save()
-        SITE_ID = online_site.id
+#     elif("freelanceafrica-test.herokuapp.com" in site_url):
+#         online_site = Site.objects.get(pk=1)
+#         online_site.domain = "freelanceafrica-test.herokuapp.com"
+#         online_site.name = "Freelance Africa Test"
+#         online_site.save()
+#         SITE_ID = online_site.id    
+
+
+def online_site():
+    try:
+        current_site = Site.objects.get_current()
+        if current_site.domain == "freelanceafrica.herokuapp.com":
+            online_site = Site.objects.get(pk=1)
+            online_site.domain = "freelanceafrica.herokuapp.com"
+            online_site.name = "Freelance Africa"
+            online_site.save()
+            SITE_ID = online_site.id
+
+        elif current_site.domain == "freelanceafrica-test.herokuapp.com":
+            online_site = Site.objects.get(pk=1)
+            online_site.domain = "freelanceafrica-test.herokuapp.com"
+            online_site.name = "Freelance Africa Test"
+            online_site.save()
+            SITE_ID = online_site.id
+        else:
+            # Do something else.
+            pass
+    except Exception, e:
+        pass
