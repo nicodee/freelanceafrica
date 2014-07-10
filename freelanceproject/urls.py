@@ -31,7 +31,7 @@ urlpatterns = patterns('',
     url(r'^accounts/signin/$', 'userena.views.signin', {'auth_form': AuthenticationFormExtra}),
     url(r'^signout/$', 'userena.views.signout'),
     url(r'^accounts/(?P<username>[\.\w-]+)/email/$', 'userena.views.email_change', {'email_form': ChangeEmailFormExtra}),
-    url(r'^accounts/(?P<username>[\.\w-]+)/edit/$', accounts_views.profile_edit),
+    url(r'^accounts/(?P<username>[\.\w-]+)/edit/$', accounts_views.profile_edit, name="accounts_profile_edit"),
     url(r'^accounts/(?P<username>[\.\w-]+)/password/$', 'userena.views.password_change', {'pass_form' : PasswordChangeFormExtra}),
     url(r'^accounts/password/reset/$',
        auth_views.password_reset,
@@ -45,6 +45,8 @@ urlpatterns = patterns('',
     url(r'^accounts/offerrer/(?P<username>[\.\w-]+)/edit/$', accounts_views.profile_edit_main, {'edit_profile_form' : EditOfferrerProfileForm}, name='accounts_offerrer_edit'),
     url(r'^accounts/freelancer/(?P<username>[\.\w-]+)/edit/$', accounts_views.profile_edit_main, {'edit_profile_form' : EditFreelancerProfileForm}, name='accounts_freelancer_edit'),
     
+    url(r'^accounts/activate/(?P<activation_key>\w+)/$', accounts_views.activate, name='accounts_activate'),
+
     url(r'^accounts/', include('userena.urls')),
 
     url(r'^admin/', include(admin.site.urls)),

@@ -34,7 +34,7 @@ class ProjectForm(ModelForm):
 			'skills': _('What skills does the project require?')
         }
 		widgets = {			
-			'name': forms.TextInput(attrs={'type': 'text', 'id': 'id_name', 'placeholder': 'name', 'required': 'true'}),
+			'name': forms.TextInput(attrs={'type': 'text', 'id': 'id_name', 'placeholder': 'Project Title', 'required': 'true'}),
 			'short_description': forms.Textarea(attrs={'type': 'text', 'id': 'id_short_description', 'maxlength':'300','placeholder': 'What is does the project entail?', 'cols': '30', 'rows': '5','style': 'resize: vertical','required': 'true'}),
 			'time_frame': forms.TextInput(attrs={'type': 'number', 'id': 'id_time_frame', 'placeholder': 'How long will it take', 'required': 'true'}),
 			'bidding_deadline': forms.TextInput(attrs={'type': 'date',  'id': 'id_bidding_deadline', 'placeholder': 'yyyy-mm-dd', 'required': 'true'}),

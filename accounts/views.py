@@ -16,6 +16,10 @@ from freelanceapp.models import SkillSet
 from freelanceapp.skillset import create_base_skills
 import json
 
+from userena.models import UserenaSignup
+from django.contrib.auth import authenticate, login, logout, REDIRECT_FIELD_NAME
+from django.contrib import messages
+
 class ExtraContextTemplateView(TemplateView):
     """ Add extra context to a simple template view """
     extra_context = None
@@ -189,3 +193,77 @@ def user_authentication(request, signup_form=SignupFormOnlyEmailExtra, auth_form
     extra_context['form_signin'] = form_signin
     return ExtraContextTemplateView.as_view(template_name=template_name,
                                             extra_context=extra_context)(request)
+
+@secure_required
+def activate(request, activation_key,
+             template_name='userena/activate_fail.html',
+             retry_template_name='userena/activate_retry.html',
+             success_url=None, extra_context=None):
+    """
+    Activate a user with an activation key.
+
+    The key is a SHA1 string. When the SHA1 is found with an
+    :class:`UserenaSignup`, the :class:`User` of that account will be
+    activated.  After a successful activation the view will redirect to
+    ``success_url``.  If the SHA1 is not found, the user will be shown the
+    ``template_name`` template displaying a fail message.
+    If the SHA1 is found but expired, ``retry_template_name`` is used instead,
+    so the user can proceed to :func:`activate_retry` to get a new actvation key.
+
+    :param activation_key:
+        String of a SHA1 string of 40 characters long. A SHA1 is always 160bit
+        long, with 4 bits per character this makes it --160/4-- 40 characters
+        long.
+
+    :param template_name:
+        String containing the template name that is used when the
+        ``activation_key`` is invalid and the activation fails. Defaults to
+        ``userena/activate_fail.html``.
+
+    :param retry_template_name:
+        String containing the template name that is used when the
+        ``activation_key`` is expired. Defaults to
+        ``userena/activate_retry.html``.
+
+    :param success_url:
+        String containing the URL where the user should be redirected to after
+        a successful activation. Will replace ``%(username)s`` with string
+        formatting if supplied. If ``success_url`` is left empty, will direct
+        to ``userena_profile_detail`` view.
+
+    :param extra_context:
+        Dictionary containing variables which could be added to the template
+        context. Default to an empty dictionary.
+
+    """
+    try:
+        if (not UserenaSignup.objects.check_expired_activation(activation_key)
+            or not userena_settings.USERENA_ACTIVATION_RETRY):
+            user = UserenaSignup.objects.activate_user(activation_key)
+            if user:
+                # Sign the user in.
+                auth_user = authenticate(identification=user.email,
+                                         check_password=False)
+                login(request, auth_user)
+
+                if userena_settings.USERENA_USE_MESSAGES:
+                    messages.success(request, _('Your account has been activated and you have been signed in.'),
+                                     fail_silently=True)
+
+                if success_url: redirect_to = success_url % {'username': user.username }
+                else: redirect_to = reverse('accounts_profile_edit', kwargs={'username': user.username})
+                return redirect(redirect_to)
+            else:
+                if not extra_context: extra_context = dict()
+                return ExtraContextTemplateView.as_view(template_name=template_name,
+                                                        extra_context=extra_context)(
+                                        request)
+        else:
+            if not extra_context: extra_context = dict()
+            extra_context['activation_key'] = activation_key
+            return ExtraContextTemplateView.as_view(template_name=retry_template_name,
+                                                extra_context=extra_context)(request)
+    except UserenaSignup.DoesNotExist:
+        if not extra_context: extra_context = dict()
+        return ExtraContextTemplateView.as_view(template_name=template_name,
+                                                extra_context=extra_context)(request)
